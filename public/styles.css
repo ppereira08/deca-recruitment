@@ -50,11 +50,34 @@ h1, h2, h3 { line-height: 1.05; }
 .nav-inner { display: flex; align-items: center; justify-content: space-between; height: 64px; }
 .brand { display: flex; align-items: center; gap: 10px; text-decoration: none; color: var(--navy); font-weight: 600; }
 .brand span { font-size: 15px; }
-.brand-mark {
-  display: grid; place-items: center; width: 34px; height: 34px;
-  background: var(--blue); color: var(--yellow); border-radius: 4px;
-  font-family: var(--font-display); font-weight: 800; font-size: 20px;
+
+/* Logo sizing */
+.brand-logo {
+  height: 32px;
+  width: auto;
+  display: block;
+  flex: 0 0 auto;
 }
+
+.badge-logo {
+  height: 26px;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.form-logo {
+  height: 28px;
+  width: auto;
+  flex: 0 0 auto;
+}
+
+.footer-mark img {
+  height: 42px;
+  width: auto;
+  margin: 0 auto;
+  display: block;
+}
+
 .nav-links { display: flex; align-items: center; gap: 22px; }
 .nav-links a { text-decoration: none; color: var(--muted); font-weight: 500; font-size: 15px; }
 .nav-links a:hover { color: var(--navy); }
@@ -151,11 +174,6 @@ h1, h2, h3 { line-height: 1.05; }
   width: 7px; height: 7px; border-radius: 50%; background: #8296c2;
 }
 .badge-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-.badge-diamond {
-  width: 32px; height: 32px; background: var(--blue); color: var(--yellow);
-  display: grid; place-items: center; border-radius: 4px;
-  font-family: var(--font-display); font-weight: 800; font-size: 19px;
-}
 .badge-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); }
 .badge-name {
   font-family: var(--font-display); font-weight: 800; font-size: 25px;
@@ -272,8 +290,7 @@ details p { margin-top: 10px; color: var(--muted); }
   display: flex; align-items: center; gap: 12px; padding: 18px 32px;
   background: var(--navy); color: #fff;
 }
-.form-card-head .badge-diamond { flex: 0 0 auto; }
-.form-card-head strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.02em; font-size: 17px; }
+.form-card-head strong { font-family: var(--font-display); text-transform: uppercase; letter-spacing: 0.02em; font-size: 17px; margin-left: 4px; }
 .form-card-head span { margin-left: auto; font-family: var(--font-mono); font-size: 11px; color: var(--yellow); letter-spacing: 0.08em; }
 .form-card-body { padding: 32px; }
 
