@@ -21,6 +21,18 @@ function escapeHtml(s) {
   return String(s ?? '').replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
 }
 
+// Formats an ISO timestamp (e.g. 2026-08-26T11:55:58.239Z) as dd/mm/yyyy hh:mm
+function formatDate(isoString) {
+  const d = new Date(isoString);
+  if (Number.isNaN(d.getTime())) return escapeHtml(isoString);
+  const dd = String(d.getDate()).padStart(2, '0');
+  const mm = String(d.getMonth() + 1).padStart(2, '0');
+  const yyyy = d.getFullYear();
+  const hh = String(d.getHours()).padStart(2, '0');
+  const min = String(d.getMinutes()).padStart(2, '0');
+  return `${dd}/${mm}/${yyyy} ${hh}:${min}`;
+}
+
 async function api(path, options = {}) {
   const res = await fetch(path, { ...options, headers: { 'Content-Type': 'application/json', 'x-admin-key': key } });
   const data = await res.json().catch(() => ({}));
@@ -90,7 +102,7 @@ function renderBuilder() {
       renderBuilder();
     });
     card.addEventListener('change', () => {
-      f.label = card.querySelector('[data-prop="label"]').value;
+      f.label = card.querySelector('[data-prop="label"]').value.trim();
       f.type = card.querySelector('[data-prop="type"]').value;
       f.required = card.querySelector('[data-prop="required"]').checked;
       f.placeholder = card.querySelector('[data-prop="placeholder"]').value.trim();
@@ -102,11 +114,19 @@ function renderBuilder() {
   });
 }
 
+// Cleans a submission value for display: trims strings, joins arrays,
+// and falls back to an empty string for null/undefined.
+function cleanValue(v) {
+  if (Array.isArray(v)) return v.map((item) => String(item).trim()).filter(Boolean).join(', ');
+  if (v == null) return '';
+  return String(v).trim();
+}
+
 function renderSubmissions(data) {
   document.getElementById('subs-count').textContent =
     `${data.submissions.length} response${data.submissions.length === 1 ? '' : 's'} received`;
   if (!data.submissions.length) {
-    subsTable.innerHTML = '<tr><td style="color:var(--muted);padding:24px;text-align:center;">No submissions yet — share the site with your chapter!</td></tr>';
+    subsTable.innerHTML = '<tr><td class="table-empty">No submissions yet — share the site with your chapter!</td></tr>';
     return;
   }
   const cols = data.fields.map((f) => f.label);
@@ -114,8 +134,8 @@ function renderSubmissions(data) {
   const rows = data.submissions
     .map(
       (s) =>
-        `<tr><td class="nowrap">${escapeHtml(s.created_at)}</td>${cols
-          .map((c) => `<td>${escapeHtml(Array.isArray(s.data[c]) ? s.data[c].join(', ') : s.data[c] ?? '')}</td>`)
+        `<tr><td class="nowrap">${formatDate(s.created_at)}</td>${cols
+          .map((c) => `<td>${escapeHtml(cleanValue(s.data[c]))}</td>`)
           .join('')}<td><button class="btn btn-danger" data-id="${s.id}">Delete</button></td></tr>`
     )
     .join('');
