@@ -8,6 +8,7 @@
   <link rel="stylesheet" href="/styles.css" />
 </head>
 <body class="admin-body">
+
   <header class="nav">
     <div class="container nav-inner">
       <a class="brand" href="/">
@@ -24,8 +25,10 @@
 
   <main id="login-view" class="section">
     <div class="container container-narrow card form-card">
-      <h2 class="section-title" style="text-align:left;">Advisor Login</h2>
-      <p style="color:var(--muted);margin:10px 0 18px;">Enter the admin key to manage the interest form and view responses.</p>
+      <h2 class="section-title section-title-left">Advisor Login</h2>
+      <p class="section-note">
+        Enter the admin key to manage the interest form and view responses.
+      </p>
       <div class="field">
         <label for="admin-key">Admin Key</label>
         <input type="password" id="admin-key" autocomplete="current-password" />
@@ -36,16 +39,19 @@
   </main>
 
   <main id="dashboard-view" hidden>
+
     <section id="tab-builder" class="section">
       <div class="container container-narrow">
         <div class="admin-toolbar">
-          <h2 class="section-title" style="text-align:left;">Customize Interest Form</h2>
+          <h2 class="section-title section-title-left">Customize Interest Form</h2>
           <div>
             <button class="btn btn-outline-blue" id="add-field-btn">+ Add Field</button>
             <button class="btn btn-yellow" id="save-form-btn">Save Changes</button>
           </div>
         </div>
-        <p style="color:var(--muted);margin-bottom:18px;">Drag-free editing: use ↑ ↓ to reorder. Changes go live immediately after saving.</p>
+        <p class="section-note-tight">
+          Drag-free editing: use ↑ ↓ to reorder. Changes go live immediately after saving.
+        </p>
         <div id="builder-list"></div>
         <p id="builder-status" class="form-status"></p>
       </div>
@@ -54,16 +60,19 @@
     <section id="tab-submissions" class="section" hidden>
       <div class="container">
         <div class="admin-toolbar">
-          <h2 class="section-title" style="text-align:left;">Form Submissions</h2>
+          <h2 class="section-title section-title-left">Form Submissions</h2>
           <div>
             <a class="btn btn-blue" id="export-btn" href="#">Export CSV</a>
             <button class="btn btn-outline-blue" id="refresh-btn">Refresh</button>
           </div>
         </div>
-        <p id="subs-count" style="color:var(--muted);margin-bottom:16px;"></p>
-        <div class="table-wrap"><table id="subs-table"></table></div>
+        <p id="subs-count" class="section-note-inline"></p>
+        <div class="table-wrap">
+          <table id="subs-table"></table>
+        </div>
       </div>
     </section>
+
   </main>
 
   <script src="/admin.js"></script>
