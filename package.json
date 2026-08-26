@@ -1,0 +1,13 @@
+{
+  "name": "deca-recruitment",
+  "version": "1.0.0",
+  "description": "Recruitment website for a high school DECA chapter with a customizable interest form",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  }
+}
