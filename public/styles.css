@@ -11,8 +11,8 @@
   --bg: #ffffff;
   --alt: #eef3fc;
   --border: #d9e2f1;
-  --radius: 16px;
-  --radius-sm: 10px;
+  --radius: 6px;
+  --radius-sm: 4px;
   --shadow: 0 10px 30px rgba(11, 29, 58, 0.10);
   --shadow-sm: 0 4px 14px rgba(11, 29, 58, 0.08);
   --font-display: "Barlow Condensed", "Arial Narrow", sans-serif;
@@ -52,7 +52,7 @@ h1, h2, h3 { line-height: 1.05; }
 .brand span { font-size: 15px; }
 .brand-mark {
   display: grid; place-items: center; width: 34px; height: 34px;
-  background: var(--blue); color: var(--yellow); border-radius: 9px;
+  background: var(--blue); color: var(--yellow); border-radius: 4px;
   font-family: var(--font-display); font-weight: 800; font-size: 20px;
 }
 .nav-links { display: flex; align-items: center; gap: 22px; }
@@ -61,7 +61,7 @@ h1, h2, h3 { line-height: 1.05; }
 
 /* ---------- Buttons ---------- */
 .btn {
-  display: inline-block; padding: 10px 20px; border-radius: 999px;
+  display: inline-block; padding: 10px 20px; border-radius: 4px;
   font-weight: 600; font-size: 15px; text-decoration: none; cursor: pointer;
   border: 2px solid transparent; transition: transform 0.15s ease, box-shadow 0.15s ease;
   letter-spacing: 0.01em;
@@ -103,7 +103,7 @@ h1, h2, h3 { line-height: 1.05; }
   font-family: var(--font-mono);
   text-transform: uppercase; letter-spacing: 0.14em; font-size: 12px;
   color: var(--yellow); font-weight: 600; margin-bottom: 18px;
-  border: 1px solid rgba(242, 183, 5, 0.4); padding: 6px 12px; border-radius: 999px;
+  border: 1px solid rgba(242, 183, 5, 0.4); padding: 6px 12px; border-radius: 4px;
 }
 .hero h1 {
   font-family: var(--font-display); text-transform: uppercase;
@@ -118,14 +118,14 @@ h1, h2, h3 { line-height: 1.05; }
   font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.03em;
   color: #fff; background: rgba(255, 255, 255, 0.10);
   border: 1px solid rgba(255, 255, 255, 0.22);
-  padding: 8px 14px; border-radius: 999px;
+  padding: 8px 14px; border-radius: 4px;
 }
 .chip::before { content: "◆"; color: var(--yellow); margin-right: 8px; font-size: 10px; }
 
 /* ---------- Conference badge (hero signature element) ---------- */
 .badge-stack { position: relative; width: 100%; max-width: 270px; height: 350px; justify-self: center; }
 .badge-card {
-  position: absolute; inset: 0; background: #fff; border-radius: 18px;
+  position: absolute; inset: 0; background: #fff; border-radius: 6px;
   box-shadow: 0 20px 44px rgba(0, 0, 0, 0.28);
   padding: 26px 24px 22px; display: flex; flex-direction: column;
 }
@@ -143,7 +143,7 @@ h1, h2, h3 { line-height: 1.05; }
 }
 .badge-clip {
   position: absolute; top: -15px; left: 50%; transform: translateX(-50%);
-  width: 60px; height: 18px; background: #c9d4e8; border-radius: 6px;
+  width: 60px; height: 18px; background: #c9d4e8; border-radius: 3px;
   box-shadow: inset 0 0 0 2px #aebedc;
 }
 .badge-clip::after {
@@ -153,7 +153,7 @@ h1, h2, h3 { line-height: 1.05; }
 .badge-top { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
 .badge-diamond {
   width: 32px; height: 32px; background: var(--blue); color: var(--yellow);
-  display: grid; place-items: center; border-radius: 8px;
+  display: grid; place-items: center; border-radius: 4px;
   font-family: var(--font-display); font-weight: 800; font-size: 19px;
 }
 .badge-kicker { font-family: var(--font-mono); font-size: 10px; letter-spacing: 0.12em; color: var(--muted); }
@@ -240,7 +240,7 @@ h1, h2, h3 { line-height: 1.05; }
 }
 .timeline span {
   position: absolute; left: 18px; top: 50%; transform: translateY(-50%) rotate(-3deg);
-  display: grid; place-items: center; width: 58px; height: 46px; border-radius: 8px;
+  display: grid; place-items: center; width: 58px; height: 46px; border-radius: 4px;
   background: var(--navy); color: var(--yellow); font-family: var(--font-mono);
   font-size: 11px; font-weight: 600; text-align: center; line-height: 1.2; padding: 4px;
   box-shadow: var(--shadow-sm);
@@ -321,7 +321,7 @@ details p { margin-top: 10px; color: var(--muted); }
 .builder-col { flex: 1; min-width: 200px; }
 .builder-col label, .builder-check { display: block; font-size: 13px; font-weight: 600; color: var(--muted); margin-bottom: 5px; }
 .builder-col input, .builder-col select, .builder-col textarea {
-  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 8px;
+  width: 100%; padding: 9px 12px; border: 1.5px solid var(--border); border-radius: 4px;
   font-family: inherit; font-size: 14px;
 }
 .builder-col textarea { resize: vertical; }
