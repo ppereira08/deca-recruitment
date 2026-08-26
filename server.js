@@ -7,7 +7,7 @@ import { pool } from './db.js';
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const PORT = process.env.PORT || 3000;
-const ADMIN_KEY = process.env.ADMIN_KEY || 'deca-admin';
+const ADMIN_KEY = process.env.ADMIN_KEY || 'admin';
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
