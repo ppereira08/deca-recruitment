@@ -1,71 +1,13 @@
 import { createServer } from 'node:http';
 import { readFile } from 'node:fs/promises';
 import path from 'node:path';
-import { fileURLToPath } from 'node:url';
-import { DatabaseSync } from 'node:sqlite';
+import { fileURLToPath, pathToFileURL } from 'node:url';
+import { pool } from './db.js';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const PUBLIC_DIR = path.join(__dirname, 'public');
 const PORT = process.env.PORT || 3000;
 const ADMIN_KEY = process.env.ADMIN_KEY || 'deca-admin';
-
-const db = new DatabaseSync(path.join(__dirname, 'deca.db'));
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS form_fields (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    label TEXT NOT NULL,
-    type TEXT NOT NULL DEFAULT 'text',
-    required INTEGER NOT NULL DEFAULT 0,
-    options TEXT,
-    placeholder TEXT,
-    sort_order INTEGER NOT NULL DEFAULT 0
-  );
-  CREATE TABLE IF NOT EXISTS submissions (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    data TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT (datetime('now', 'localtime'))
-  );
-`);
-
-function seedFields() {
-  const { n } = db.prepare('SELECT COUNT(*) AS n FROM form_fields').get();
-  if (n > 0) return;
-  const defaults = [
-    { label: 'First Name', type: 'text', required: 1 },
-    { label: 'Last Name', type: 'text', required: 1 },
-    { label: 'School Email', type: 'email', required: 1, placeholder: 'you@school.edu' },
-    { label: 'Grade Level', type: 'select', required: 1, options: ['9', '10', '11', '12'] },
-    { label: 'Phone Number', type: 'tel', required: 0, placeholder: '(555) 555-5555' },
-    {
-      label: 'Areas of Interest',
-      type: 'checkbox-group',
-      required: 0,
-      options: [
-        'Marketing',
-        'Finance',
-        'Business Management',
-        'Entrepreneurship',
-        'Hospitality & Tourism',
-        'Sports & Entertainment Marketing'
-      ]
-    },
-    {
-      label: 'How did you hear about us?',
-      type: 'select',
-      required: 0,
-      options: ['Friend', 'Teacher', 'Morning Announcements', 'Social Media', 'Club Fair', 'Other']
-    },
-    { label: 'Questions or Comments', type: 'textarea', required: 0 }
-  ];
-  const ins = db.prepare(
-    'INSERT INTO form_fields (label, type, required, options, placeholder, sort_order) VALUES (?, ?, ?, ?, ?, ?)'
-  );
-  defaults.forEach((f, i) =>
-    ins.run(f.label, f.type, f.required, f.options ? f.options.join('\n') : null, f.placeholder || null, i)
-  );
-}
-seedFields();
 
 const MIME = {
   '.html': 'text/html; charset=utf-8',
@@ -107,18 +49,18 @@ function readBody(req) {
   });
 }
 
-function getFields() {
-  return db
-    .prepare('SELECT * FROM form_fields ORDER BY sort_order, id')
-    .all()
-    .map((f) => ({
-      id: f.id,
-      label: f.label,
-      type: f.type,
-      required: !!f.required,
-      options: f.options ? f.options.split('\n').filter(Boolean) : [],
-      placeholder: f.placeholder || ''
-    }));
+async function getFields() {
+  const { rows } = await pool.query(
+    'SELECT id, label, type, required, options, placeholder FROM form_fields ORDER BY sort_order, id'
+  );
+  return rows.map((f) => ({
+    id: f.id,
+    label: f.label,
+    type: f.type,
+    required: !!f.required,
+    options: f.options ? f.options.split('\n').filter(Boolean) : [],
+    placeholder: f.placeholder || ''
+  }));
 }
 
 function validateSubmission(fields, body) {
@@ -174,21 +116,21 @@ async function sendFile(res, urlPath) {
   }
 }
 
-const server = createServer(async (req, res) => {
+async function handler(req, res) {
   const url = new URL(req.url, `http://${req.headers.host}`);
   const p = url.pathname;
 
   try {
     if (p === '/api/form' && req.method === 'GET') {
-      return json(res, 200, { fields: getFields() });
+      return json(res, 200, { fields: await getFields() });
     }
 
     if (p === '/api/submit' && req.method === 'POST') {
       const body = await readBody(req);
-      const fields = getFields();
+      const fields = await getFields();
       const { values, error } = validateSubmission(fields, body);
       if (error) return json(res, 400, { error });
-      db.prepare('INSERT INTO submissions (data) VALUES (?)').run(JSON.stringify(values));
+      await pool.query('INSERT INTO submissions (data) VALUES ($1)', [JSON.stringify(values)]);
       return json(res, 200, { ok: true });
     }
 
@@ -221,45 +163,55 @@ const server = createServer(async (req, res) => {
           sort_order: i
         });
       }
-      db.exec('BEGIN');
+      const client = await pool.connect();
       try {
-        db.exec('DELETE FROM form_fields');
-        const ins = db.prepare(
-          'INSERT INTO form_fields (label, type, required, options, placeholder, sort_order) VALUES (?, ?, ?, ?, ?, ?)'
-        );
+        await client.query('BEGIN');
+        await client.query('DELETE FROM form_fields');
         for (const f of clean)
-          ins.run(f.label, f.type, f.required, f.options, f.placeholder, f.sort_order);
-        db.exec('COMMIT');
+          await client.query(
+            'INSERT INTO form_fields (label, type, required, options, placeholder, sort_order) VALUES ($1, $2, $3, $4, $5, $6)',
+            [f.label, f.type, f.required, f.options, f.placeholder, f.sort_order]
+          );
+        await client.query('COMMIT');
       } catch (e) {
-        db.exec('ROLLBACK');
+        await client.query('ROLLBACK');
         throw e;
+      } finally {
+        client.release();
       }
-      return json(res, 200, { fields: getFields() });
+      return json(res, 200, { fields: await getFields() });
     }
 
     if (p === '/api/admin/submissions' && req.method === 'GET') {
-      const rows = db.prepare('SELECT * FROM submissions ORDER BY id DESC').all();
+      const { rows } = await pool.query('SELECT id, data, created_at FROM submissions ORDER BY id DESC');
       return json(res, 200, {
-        fields: getFields(),
-        submissions: rows.map((r) => ({ id: r.id, created_at: r.created_at, data: JSON.parse(r.data) }))
+        fields: await getFields(),
+        submissions: rows.map((r) => ({
+          id: r.id,
+          created_at: new Date(r.created_at).toISOString(),
+          data: JSON.parse(r.data)
+        }))
       });
     }
 
     const delMatch = p.match(/^\/api\/admin\/submissions\/(\d+)$/);
     if (delMatch && req.method === 'DELETE') {
-      db.prepare('DELETE FROM submissions WHERE id = ?').run(Number(delMatch[1]));
+      await pool.query('DELETE FROM submissions WHERE id = $1', [Number(delMatch[1])]);
       return json(res, 200, { ok: true });
     }
 
     if (p === '/api/admin/export' && req.method === 'GET') {
-      const fields = getFields();
-      const rows = db.prepare('SELECT * FROM submissions ORDER BY id ASC').all();
+      const fields = await getFields();
+      const { rows } = await pool.query('SELECT id, data, created_at FROM submissions ORDER BY id ASC');
       const header = [...fields.map((f) => f.label), 'Submitted At'];
       const lines = [header.map(csvEscape).join(',')];
       for (const r of rows) {
         const data = JSON.parse(r.data);
         lines.push(
-          [...fields.map((f) => (Array.isArray(data[f.label]) ? data[f.label].join('; ') : data[f.label] ?? '')), r.created_at]
+          [
+            ...fields.map((f) => (Array.isArray(data[f.label]) ? data[f.label].join('; ') : data[f.label] ?? '')),
+            new Date(r.created_at).toISOString()
+          ]
             .map(csvEscape)
             .join(',')
         );
@@ -283,9 +235,13 @@ const server = createServer(async (req, res) => {
   } catch (err) {
     return json(res, err.message === 'Invalid JSON' ? 400 : 500, { error: err.message || 'Server error' });
   }
-});
+}
 
-server.listen(PORT, () => {
-  console.log(`DECA recruitment site running at http://localhost:${PORT}`);
-  console.log(`Admin page: http://localhost:${PORT}/admin.html (key: set ADMIN_KEY env var, default "${ADMIN_KEY}")`);
-});
+export default handler;
+
+if (process.argv[1] && import.meta.url === pathToFileURL(process.argv[1]).href) {
+  createServer((req, res) => handler(req, res)).listen(PORT, () => {
+    console.log(`DECA recruitment site running at http://localhost:${PORT}`);
+    console.log(`Admin page: http://localhost:${PORT}/admin.html (key: set ADMIN_KEY env var, default "${ADMIN_KEY}")`);
+  });
+}
