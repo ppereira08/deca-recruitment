@@ -51,6 +51,23 @@ function formatDate(isoString) {
 }
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Every admin API request sends the key in a request header.
+ *
+ * IMPORTANT:
+ * ADMIN_KEY itself does NOT belong here.
+ *
+ * The server should compare:
+ *
+ * req.headers['x-admin-key']
+ *
+ * against:
+ *
+ * process.env.ADMIN_KEY
+ */
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 async function api(path, options = {}) {
   const headers = {
     ...(options.body ? { 'Content-Type': 'application/json' } : {}),
@@ -420,6 +437,13 @@ async function loadSubmissions() {
 }
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Tabs
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .querySelectorAll('.tab-btn[data-tab]')
   .forEach((btn) => {
@@ -450,11 +474,25 @@ document
   });
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Logout
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .getElementById('logout-btn')
   .addEventListener('click', logout);
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Login
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 loginForm.addEventListener('submit', async (e) => {
 
   e.preventDefault();
@@ -489,6 +527,15 @@ loginForm.addEventListener('submit', async (e) => {
 
   try {
 
+<<<<<<< HEAD
+=======
+    /*
+     * This request verifies the key server-side.
+     *
+     * The server compares the submitted x-admin-key
+     * against process.env.ADMIN_KEY.
+     */
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
     await api('/api/admin/submissions');
 
 
@@ -528,6 +575,13 @@ loginForm.addEventListener('submit', async (e) => {
 });
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Add field
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .getElementById('add-field-btn')
   .addEventListener('click', () => {
@@ -552,6 +606,13 @@ document
   });
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Save form
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .getElementById('save-form-btn')
   .addEventListener('click', async () => {
@@ -608,6 +669,13 @@ document
 
   });
 
+<<<<<<< HEAD
+=======
+
+/*
+ * Delete submission
+ */
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 
 subsTable.addEventListener('click', async (e) => {
 
@@ -643,6 +711,13 @@ subsTable.addEventListener('click', async (e) => {
 });
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Refresh
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .getElementById('refresh-btn')
   .addEventListener(
@@ -651,6 +726,17 @@ document
   );
 
 
+<<<<<<< HEAD
+=======
+/*
+ * Export CSV
+ *
+ * Do NOT put the admin key in the URL.
+ *
+ * The key is sent as an HTTP header instead.
+ */
+
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 document
   .getElementById('export-btn')
   .addEventListener('click', async () => {
@@ -723,6 +809,13 @@ document
 
   });
 
+<<<<<<< HEAD
+=======
+
+/*
+ * Restore existing session.
+ */
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
 
 (async () => {
 
@@ -757,4 +850,8 @@ document
 
   }
 
+<<<<<<< HEAD
 })();
+=======
+})();
+>>>>>>> 9c9804e723602e4398093764c04c1b3104e05a19
