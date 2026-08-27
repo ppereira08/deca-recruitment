@@ -220,7 +220,7 @@ a { color: inherit; }
 /* FAQ */
 details {
   background: #fff; border: 1px solid var(--border); border-radius: var(--radius);
-  margin-bottom: 12px; padding: 18px 22px; box-shadow: var(--shadow-sm);
+  margin-bottom: 24px; padding: 18px 22px; box-shadow: var(--shadow-sm);
 }
 summary {
   cursor: pointer; font-weight: 600; color: var(--navy); list-style: none;
