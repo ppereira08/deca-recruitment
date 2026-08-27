@@ -153,7 +153,7 @@ a { color: inherit; }
 
 /* ---------- Sections ---------- */
 .section { padding: 76px 0; }
-.section-alt { background: var(--alt); }
+.section-alt { background: var(--alt); border-top: 1px solid var(--border); }
 .section-title {
   font-family: var(--font-display); text-transform: uppercase;
   font-size: clamp(28px, 4vw, 40px); font-weight: 800; letter-spacing: 0.01em;
@@ -178,6 +178,7 @@ a { color: inherit; }
    architectural drawings rather than a decorative pattern */
 .section-grid {
   background-color: var(--alt);
+  border-top: 1px solid var(--border);
   background-image:
     linear-gradient(var(--border) 1px, transparent 1px),
     linear-gradient(90deg, var(--border) 1px, transparent 1px);
@@ -234,7 +235,7 @@ details[open] summary::after { content: "\2013"; }
 details p { margin-top: 10px; color: var(--muted); }
 
 /* Join / registration form */
-.join-section { background: linear-gradient(180deg, var(--alt), #eaf1fb); }
+.join-section { background: linear-gradient(180deg, var(--alt), #eaf1fb); border-top: 1px solid var(--border); }
 .form-card { padding: 0; overflow: hidden; }
 .form-card-head {
   display: flex; align-items: center; gap: 12px; padding: 18px 32px;
