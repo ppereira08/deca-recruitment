@@ -4,68 +4,204 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Chapter Admin — DECA Interest Form</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230057b8'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' fill='%23ffd200' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E" />
+
+  <link
+    rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='20' fill='%230057b8'/%3E%3Ctext x='50' y='68' font-size='52' font-family='Arial' font-weight='bold' fill='%23ffd200' text-anchor='middle'%3ED%3C/text%3E%3C/svg%3E"
+  />
+
   <link rel="stylesheet" href="/styles.css" />
 </head>
+
 <body class="admin-body">
+
   <header class="nav">
     <div class="container nav-inner">
+
       <a class="brand" href="/">
         <span class="brand-mark">D</span>
         <span>DECA Chapter <strong>Admin</strong></span>
       </a>
+
       <nav class="nav-links">
-        <button class="tab-btn active" data-tab="builder">Form Builder</button>
-        <button class="tab-btn" data-tab="submissions">Submissions</button>
-        <a href="/">← Back to site</a>
+        <button class="tab-btn active" data-tab="builder">
+          Form Builder
+        </button>
+
+        <button class="tab-btn" data-tab="submissions">
+          Submissions
+        </button>
+
+        <a href="/">
+          ← Back to site
+        </a>
+
+        <button class="tab-btn" id="logout-btn">
+          Log Out
+        </button>
       </nav>
+
     </div>
   </header>
 
+
+  <!-- LOGIN -->
+
   <main id="login-view" class="section">
+
     <div class="container container-narrow card form-card">
-      <h2 class="section-title" style="text-align:left;">Advisor Login</h2>
-      <p style="color:var(--muted);margin:10px 0 18px;">Enter the admin key to manage the interest form and view responses.</p>
-      <div class="field">
-        <label for="admin-key">Admin Key</label>
-        <input type="password" id="admin-key" autocomplete="current-password" />
-      </div>
-      <button class="btn btn-blue btn-block" id="login-btn">Unlock Dashboard</button>
-      <p id="login-status" class="form-status error"></p>
+
+      <h2 class="section-title section-title-left">
+        Advisor Login
+      </h2>
+
+      <p class="section-note">
+        Enter the admin key to manage the interest form and view responses.
+      </p>
+
+      <form id="login-form">
+
+        <div class="field">
+          <label for="admin-key">
+            Admin Key
+          </label>
+
+          <input
+            type="password"
+            id="admin-key"
+            name="admin-key"
+            autocomplete="current-password"
+            required
+          />
+        </div>
+
+        <button
+          type="submit"
+          class="btn btn-blue btn-block"
+          id="login-btn"
+        >
+          Unlock Dashboard
+        </button>
+
+      </form>
+
+      <p
+        id="login-status"
+        class="form-status"
+        role="status"
+        aria-live="polite"
+      ></p>
+
     </div>
+
   </main>
+
+
+  <!-- DASHBOARD -->
 
   <main id="dashboard-view" hidden>
+
+    <!-- FORM BUILDER -->
+
     <section id="tab-builder" class="section">
+
       <div class="container container-narrow">
+
         <div class="admin-toolbar">
-          <h2 class="section-title" style="text-align:left;">Customize Interest Form</h2>
+
+          <h2 class="section-title section-title-left">
+            Customize Interest Form
+          </h2>
+
           <div>
-            <button class="btn btn-outline-blue" id="add-field-btn">+ Add Field</button>
-            <button class="btn btn-yellow" id="save-form-btn">Save Changes</button>
+            <button
+              class="btn btn-outline-blue"
+              id="add-field-btn"
+              type="button"
+            >
+              + Add Field
+            </button>
+
+            <button
+              class="btn btn-yellow"
+              id="save-form-btn"
+              type="button"
+            >
+              Save Changes
+            </button>
           </div>
+
         </div>
-        <p style="color:var(--muted);margin-bottom:18px;">Drag-free editing: use ↑ ↓ to reorder. Changes go live immediately after saving.</p>
+
+        <p class="section-note-tight">
+          Use ↑ ↓ to reorder fields. Changes go live immediately after saving.
+        </p>
+
         <div id="builder-list"></div>
-        <p id="builder-status" class="form-status"></p>
+
+        <p
+          id="builder-status"
+          class="form-status"
+          role="status"
+          aria-live="polite"
+        ></p>
+
       </div>
+
     </section>
+
+
+    <!-- SUBMISSIONS -->
 
     <section id="tab-submissions" class="section" hidden>
+
       <div class="container">
+
         <div class="admin-toolbar">
-          <h2 class="section-title" style="text-align:left;">Form Submissions</h2>
+
+          <h2 class="section-title section-title-left">
+            Form Submissions
+          </h2>
+
           <div>
-            <a class="btn btn-blue" id="export-btn" href="#">Export CSV</a>
-            <button class="btn btn-outline-blue" id="refresh-btn">Refresh</button>
+
+            <button
+              class="btn btn-blue"
+              id="export-btn"
+              type="button"
+            >
+              Export CSV
+            </button>
+
+            <button
+              class="btn btn-outline-blue"
+              id="refresh-btn"
+              type="button"
+            >
+              Refresh
+            </button>
+
           </div>
+
         </div>
-        <p id="subs-count" style="color:var(--muted);margin-bottom:16px;"></p>
-        <div class="table-wrap"><table id="subs-table"></table></div>
+
+        <p
+          id="subs-count"
+          class="section-note-inline"
+        ></p>
+
+        <div class="table-wrap">
+          <table id="subs-table"></table>
+        </div>
+
       </div>
+
     </section>
+
   </main>
 
+
   <script src="/admin.js"></script>
+
 </body>
 </html>

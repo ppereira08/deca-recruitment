@@ -2,25 +2,8 @@ const form = document.getElementById('interest-form');
 const fieldsContainer = document.getElementById('form-fields');
 const statusEl = document.getElementById('form-status');
 const submitBtn = document.getElementById('submit-btn');
-const navToggle = document.getElementById('nav-toggle');
-const navLinks = document.getElementById('nav-links');
 
 let fields = [];
-
-function closeNav() {
-  navLinks.classList.remove('open');
-  navToggle.setAttribute('aria-expanded', 'false');
-  navToggle.classList.remove('active');
-}
-
-if (navToggle && navLinks) {
-  navToggle.addEventListener('click', () => {
-    const isOpen = navLinks.classList.toggle('open');
-    navToggle.classList.toggle('active', isOpen);
-    navToggle.setAttribute('aria-expanded', String(isOpen));
-  });
-  navLinks.querySelectorAll('a').forEach((a) => a.addEventListener('click', closeNav));
-}
 
 function escapeHtml(s) {
   return String(s).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
